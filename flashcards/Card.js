@@ -8,28 +8,28 @@ import {
 } from 'react-native';
 
 export default class Card extends React.Component {
-  state = {
-    showTerm: false,
-    favorite: false
-  }
+  // state = {
+  //   showTerm: false,
+  //   favorite: this.props.favorite
+  // }
+  constructor(props) {
+  super(props);
+  this.state = {showTerm: true, favorite: props.favorite};
+}
 
   /*
     Flips the showTerm flag in our state
   */
   flipCard = () => {
     (this.props.deleteMode) ?
-    this.props.deleteCard(this.props.index)
+    this.props.deleteCard(this.props.cardData.term)
     : this.setState({ showTerm: !this.state.showTerm});
   }
 
-  componentWillReceiveProps(newProps) {
-    favorite: true
-  }
-
   favoritePressed = () => {
-    this.setState({
-      favorite: !this.state.favorite
-    });
+    // (this.state.favorite) ?
+    this.props.favoritePressed(this.props.cardData.term);
+    this.setState({ favorite: !this.state.favorite });
   }
 
   render() {
@@ -41,13 +41,12 @@ export default class Card extends React.Component {
         <View style={[styles.container]}>
           <View style={styles.topBar} >
           <Text style={styles.cardTitle}>{(this.state.showTerm) ? ("Term") : ("Definition")}</Text>
-          {/* <Text style={styles.favoriteTitle}>{(this.state.favorite) ? ("Unfavorite") : ("Favorite")}</Text> */}
-          <Button
-            style={styles.favoriteTitle}
+          <Text style={styles.favorite}
+            style={styles.favoriteButton}
             onPress={this.favoritePressed}
-            title={(this.state.favorite) ? ("Unfavorite") : ("Favorite")}
             color={(this.state.favorite) ? ("#ffd700") : ("#841584")}
-          />
+            >{(this.state.favorite) ? ("★") : ("☆")}
+          </Text>
         </View>
           <Text style={textStyle}>{(this.state.showTerm) ? (this.props.cardData.term) : (this.props.cardData.definition)}</Text>
         </View>
@@ -74,27 +73,21 @@ const styles = StyleSheet.create({
     color: '#7f8c8d',
     fontSize: 18,
     fontFamily: 'Avenir Next',
-    // position: 'absolute',
-    // left: 20,
-    // top: 20
   },
-  favoriteTitle: {
-    color: '#7f8c8d',
-    fontSize: 10,
+  favoriteButton: {
+    color: '#eaea00',
+    fontSize: 25,
     fontFamily: 'Avenir Next',
-    // position: 'absolute',
-    // right: 20,
-    // top: 20
   },
   termText: {
-    fontSize: 60,
+    fontSize: 50,
     fontFamily: 'AvenirNext-Medium',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   definitionText: {
     fontSize: 24,
     fontFamily: 'Avenir Next',
-    textAlign: 'left'
+    textAlign: 'center',
   },
   topBar: {
     flex: 1,
